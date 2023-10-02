@@ -1,7 +1,7 @@
 
 # Web Socket Chat App 
 
-This project for chatting on express sever ith web socket.io.
+This project for chatting on express sever with web socket.io.
 
 
 
