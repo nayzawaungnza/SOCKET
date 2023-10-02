@@ -4,8 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOCKET</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/argon-design-system-free@1.2.0/gulpfile.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/argon-design-system-free@1.2.0/assets/css/argon-design-system.min.css">
+    <style>
+        
+
+      #chat-window {
+        height: 300px;
+        overflow: auto;
+        background: #f9f9f9;
+      }
+
+      #output p {
+        padding: 14px 0px;
+        margin: 0 20px;
+        border-bottom: 1px solid #e9e9e9;
+        color: #555;
+      }
+
+      #feedback p {
+        color: #aaa;
+        padding: 14px 0px;
+        margin: 0 20px;
+      }
+
+      #output strong {
+        color: #2b90d9;
+      }
+    </style>
 </head>
 <body>
-    <h1>Socket</h1>
+    
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div id="app"  class="card shadow card-body">
+                    <h1 class="btn btn-dark text-white">Chat App with Socket</h1>
+                    <div id="chat-window" class="">
+                        <div id="output"></div>
+                        <div id="feedback"></div>
+                    </div>
+                   
+
+                    <div class="form-group">
+                        <input type="text" placeholder="Enter Name" id="name" name="name" class="form-control">
+                        
+                    </div>
+                    <div class="form-group">
+                        <input type="text" placeholder="Enter Message" id="message" name="message" class="form-control form-control">
+                        
+                    </div>
+                    <input type="submit" id="send" class="btn btn-success" value="Send">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io("http://localhost:4000");
+        let output = document.getElementById("output");
+        let feedback = document.getElementById("feedback");
+        let name = document.getElementById("name");
+        let message = document.getElementById("message");
+        let send = document.getElementById("send");
+
+        send.addEventListener('click',()=>{
+            let data = {
+                name:name.value,
+                message:message.value
+            }
+            socket.emit("chat",data);//emit has 2 parameter(name, data) to sever side
+            
+        });
+        //listen event
+        socket.on("chat",(data)=>{
+            console.log(data);
+            output.innerHTML +=`<p><strong>${data.name}</strong> : ${data.message}</p>`;
+            name.value="";message.value="";
+        })
+
+    </script>
 </body>
 </html>

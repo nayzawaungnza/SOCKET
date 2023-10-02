@@ -12,7 +12,11 @@ app.get('/',(respect,request)=>{
 });
 
 //socket setup
-let io = socket(sever,{})
-io.on('connection',(socket)=>{
-
+let io = socket(server);
+io.on("connection",(socket)=>{
+    console.log("Socket connection connected" + socket.id);
+    socket.on("chat",(data)=>{ //received by name
+        console.log(data);
+        io.sockets.emit("chat",data);
+    })
 })
