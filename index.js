@@ -14,9 +14,15 @@ app.get('/',(respect,request)=>{
 //socket setup
 let io = socket(server);
 io.on("connection",(socket)=>{
-    console.log("Socket connection connected" + socket.id);
+    //console.log("Socket connection connected" + socket.id);
     socket.on("chat",(data)=>{ //received by name
         console.log(data);
         io.sockets.emit("chat",data);
-    })
-})
+    });
+
+    socket.on("typing",(name)=>{ //received by name for typing ,not yourself
+       // console.log(data);
+        socket.broadcast.emit("typing",name);//not contain typing owner
+    });
+
+});

@@ -70,18 +70,47 @@
         let send = document.getElementById("send");
 
         send.addEventListener('click',()=>{
-            let data = {
+            if(name.value.trim()==""){
+                name.classList.add("is-invalid");
+            }else{
+                if(name.classList.contains("is-invalid")){
+                    name.classList.remove("is-invalid");
+                }
+            }
+            if(message.value.trim()==""){
+                message.classList.add("is-invalid");
+            }else{
+                if(message.classList.contains("is-invalid")){
+                    message.classList.remove("is-invalid");
+                }
+            }
+            if(name.value.trim()!="" && message.value.trim()!=""){
+                let data = {
                 name:name.value,
                 message:message.value
+                }
+                socket.emit("chat",data);//emit has 2 parameter(name, data) to sever side
             }
-            socket.emit("chat",data);//emit has 2 parameter(name, data) to sever side
-            
+ 
+        });
+        //
+        message.addEventListener('keypress',()=>{
+            socket.emit("typing",name.value);
         });
         //listen event
         socket.on("chat",(data)=>{
             console.log(data);
-            output.innerHTML +=`<p><strong>${data.name}</strong> : ${data.message}</p>`;
-            name.value="";message.value="";
+            output.innerHTML +=`<p class='text-danger'><strong class='text-success'>${data.name}</strong> : ${data.message}</p>`;
+            name.value="";
+            message.value="";
+            feedback.innerHTML="";
+        });
+
+        socket.on("typing",(name)=>{
+            feedback.innerHTML =`<p ><em class='text-primary'>${name}</em> is typing</p>`;
+            setTimeout(() => {
+                feedback.innerHTML="";
+            }, 3000);
         })
 
     </script>
